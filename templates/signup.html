@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %} Зарегистрироваться {% endblock %}
+
+{% block content %}
+<div class="container">
+    <div>
+      <label for="firstName" class="form-label">First name</label>
+      <input type="text" class="form-control" id="firstName" placeholder="" value="" required="">
+    </div>
+
+    <div>
+      <label for="lastName" class="form-label">Last name</label>
+      <input type="text" class="form-control" id="lastName" placeholder="" value="" required="">
+    </div>
+
+    <div>
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" placeholder="you@example.com">
+      </div>
+
+    <div>
+      <label for="login" class="form-label">Login</label>
+      <div class="input-group has-validation">
+        <input type="text" class="form-control" id="username" placeholder="login" required="">
+      </div>
+    </div>
+
+    <div>
+        <label for="inputPassword" class="form-label">Password</label>
+        <input type="password" id="password" class="form-control" placeholder="Password" required="">   
+     </div>
+
+     <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+  </div>
+    {% endblock %}
