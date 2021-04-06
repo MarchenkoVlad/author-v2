@@ -3,34 +3,47 @@
 {% block title %} Зарегистрироваться {% endblock %}
 
 {% block content %}
-<div class="container">
+<!--причем здесь wrap. без него не работает-->
+<form class="container" method="POST" action="{{url_for('wrap.signup')}}">
     <div>
-      <label for="firstName" class="form-label">First name</label>
-      <input type="text" class="form-control" id="firstName" placeholder="" value="" required="">
+      <label for="first_name" class="form-label">first_name</label>
+      <input type="text" class="form-control" name="first_name" placeholder="first_name" value="" required="">
     </div>
 
     <div>
-      <label for="lastName" class="form-label">Last name</label>
-      <input type="text" class="form-control" id="lastName" placeholder="" value="" required="">
+      <label for="last_name" class="form-label">last_name</label>
+      <input type="text" class="form-control" name="last_name" placeholder="last_name" value="" required="">
     </div>
-
+    {% if error %}
+      <div>
+          <label for="email" class="form-label">email</label>
+          <input type="email" class="form-control error-email" name="email" placeholder="email">
+          <span style="color:red;font-size: 12px;">{{error}}</span>
+        </div>
+    {% else %}
+        <div>
+          <label for="email" class="form-label">email</label>
+          <input type="email" class="form-control" name="email" placeholder="email">
+        </div>
+    {% endif %}
     <div>
-        <label for="email" class="form-label">Email</label>
-        <input type="email" class="form-control" id="email" placeholder="you@example.com">
-      </div>
-
-    <div>
-      <label for="login" class="form-label">Login</label>
+      <label for="login" class="form-label">login</label>
       <div class="input-group has-validation">
-        <input type="text" class="form-control" id="username" placeholder="login" required="">
+        <input type="text" class="form-control" name="login" placeholder="login" required="">
       </div>
     </div>
 
     <div>
-        <label for="inputPassword" class="form-label">Password</label>
-        <input type="password" id="password" class="form-control" placeholder="Password" required="">   
+        <label for="inputPassword" class="form-label">password</label>
+        <input type="password" name="password" class="form-control" placeholder="password" required="">   
      </div>
 
-     <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
-  </div>
+     <button class="w-100 btn btn-lg btn-primary" style="margin-top: 30px ;"type="submit">Sign in</button>
+
+    </form>
+    <style>
+      .error-email {
+        border: 2px solid red;
+      }
+    </style>
     {% endblock %}
