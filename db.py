@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 PWD = 'password'
 USR= 'root'
 
-SQLALCHEMY_DATABASE_URL = 'mysql://{}:{}@localhost:3306/base'.format(USR, PWD)
+SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db" #'mysql://{}:{}@localhost:3306/mydatabase'.format(USR, PWD)
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
