@@ -3,47 +3,43 @@
 {% block title %} Зарегистрироваться {% endblock %}
 
 {% block content %}
-<!--причем здесь wrap. без него не работает-->
+
 <form class="container" method="POST" action="{{url_for('wrap.signup')}}">
-    <div>
-      <label for="first_name" class="form-label">first_name</label>
-      <input type="text" class="form-control" name="first_name" placeholder="first_name" value="" required="">
+  <h1 class="h3 mb-3 fw-normal">Пожалуйста зарегистрируйтесь</h1>
+    <div class="form">
+      <input type="text" class="form-control" name="first_name" placeholder="Введите ваше имя" value="" required="">
     </div>
 
-    <div>
-      <label for="last_name" class="form-label">last_name</label>
-      <input type="text" class="form-control" name="last_name" placeholder="last_name" value="" required="">
+    <div class="form">
+      <input type="text" class="form-control" name="last_name" placeholder="Введите вашу фамилию" value="" required="">
     </div>
     {% if error %}
-      <div>
-          <label for="email" class="form-label">email</label>
-          <input type="email" class="form-control error-email" name="email" placeholder="email">
-          <span style="color:red;font-size: 12px;">{{error}}</span>
+      <div class="form">
+          <input type="email" class="form-control" style="border: 2px solid red;" name="email" placeholder="Введите другой email или авторизуйтесь">
+          <span class="email_error">{{error}}</span>
         </div>
     {% else %}
-        <div>
-          <label for="email" class="form-label">email</label>
-          <input type="email" class="form-control" name="email" placeholder="email">
+        <div class="form">
+          <input type="email" class="form-control" name="email" placeholder="Введите email">
         </div>
     {% endif %}
-    <div>
-      <label for="login" class="form-label">login</label>
-      <div class="input-group has-validation">
-        <input type="text" class="form-control" name="login" placeholder="login" required="">
-      </div>
-    </div>
 
-    <div>
-        <label for="inputPassword" class="form-label">password</label>
-        <input type="password" name="password" class="form-control" placeholder="password" required="">   
+    <div class="form">
+        <input type="password" name="password" class="form-control" placeholder="Придумайте и введите пароль" required="">   
      </div>
 
-     <button class="w-100 btn btn-lg btn-primary" style="margin-top: 30px ;"type="submit">Sign in</button>
+     <button class="w-100 btn btn-lg btn-primary form" style="margin-top: 30px" type="submit">Зарегистрироваться</button>
 
     </form>
-    <style>
-      .error-email {
-        border: 2px solid red;
-      }
-    </style>
+
+    <div class="container">
+      Если у вас уже есть аккаунт перейдите по ссылке: <a href="login">Войти</a>
+    </div>
     {% endblock %}
+
+    <style>
+      body {
+    display: flex;
+    }
+
+    </style>
