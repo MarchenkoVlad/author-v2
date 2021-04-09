@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from flask import Blueprint, render_template, abort, request, redirect, url_for
-from models import User
+from models import User, Article
 from crypt import bcrypt
-from forms import AuthForm
+from forms import AuthForm#, ArticleForm
 from sqlalchemy.exc import IntegrityError
 import db
 import json
@@ -12,7 +12,12 @@ wrap = Blueprint('wrap', __name__)
 
 @wrap.route('/')
 def get_page():
-    return render_template("signup.html")
+    return render_template("base.html")
+
+
+@wrap.route('/index')
+def get_page_index():
+    return render_template("index.html")
 
 
 @wrap.route('/signup', methods=['GET', 'POST'])
@@ -27,7 +32,6 @@ def signup():
             new_user = User(first_name=form.data['first_name'], 
                             last_name=form.data['last_name'], 
                             email=form.data['email'],   
-                            login=form.data['login'], 
                             password=form.data['password'])
             db.session.add(new_user)
             db.session.commit()
@@ -42,7 +46,7 @@ def signup():
 def login():
     form = AuthForm(request.form)
     if request.method == 'POST':
-        found_user = db.session.query(User).filter_by(login = form.data['login']).first()
+        found_user = db.session.query(User).filter_by(email = form.data['email']).first()
         if found_user:
             authenticated_user = bcrypt.check_password_hash(found_user.password, form.data['password'])
             if authenticated_user:
@@ -53,3 +57,24 @@ def login():
 @wrap.route('/welcome')
 def welcome():
     return render_template('welcome.html')
+
+
+@wrap.route('/create_article', methods=['POST', 'GET'])
+def create_article():
+    if request.method == 'POST':
+        print(request.form)
+        article = Article('авыаваы', 'ыафыаф', 'ffasf')#title=request.form['title'], article_text=request.form['article_text'], intro=request.form['intro'])
+        db.session.add(article)
+        db.session.commit()
+        return redirect('/')
+
+        """try:
+            db.session.add(article)
+            db.session.commit()
+            return redirect('/')
+        
+        except:
+            return "При добавлении статьи произошла ошибка"
+        """
+    else:
+        return render_template("create_article.html")
