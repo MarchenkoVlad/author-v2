@@ -7,9 +7,9 @@ USR= 'root'
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db" #'mysql://{}:{}@localhost:3306/mydatabase'.format(USR, PWD)
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 session = SessionLocal()
 Base = declarative_base()
 #функция, которая создает базовый класс
-# для декларативных определений классов
+# для декларативных определений классовdb
