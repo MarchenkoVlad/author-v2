@@ -63,18 +63,20 @@ def welcome():
 def create_article():
     if request.method == 'POST':
         print(request.form)
-        article = Article('авыаваы', 'ыафыаф', 'ffasf')#title=request.form['title'], article_text=request.form['article_text'], intro=request.form['intro'])
-        db.session.add(article)
-        db.session.commit()
-        return redirect('/')
-
-        """try:
+        article = Article(title=request.form['title'], article_text=request.form['article_text'], intro=request.form['intro'])
+        try:
             db.session.add(article)
             db.session.commit()
-            return redirect('/')
+            return redirect('/posts')
         
         except:
             return "При добавлении статьи произошла ошибка"
-        """
+        
     else:
         return render_template("create_article.html")
+
+@wrap.route('/posts')
+def posts():
+    articles = db.session.query(Article).order_by(Article.date.desc()).all()
+
+    return render_template('posts.html', articles=articles)
