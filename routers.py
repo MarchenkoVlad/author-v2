@@ -80,3 +80,9 @@ def posts():
     articles = db.session.query(Article).order_by(Article.date.desc()).all()
 
     return render_template('posts.html', articles=articles)
+
+
+@wrap.route('/post/<int:id>')
+def show_post(id):
+    article = Article.query.get(id)
+    return render_template("post_detail.html", article=article)
