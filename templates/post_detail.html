@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %} 
+{{ article.title }}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ article.title }} </h1>
+    <div class="alert alert-info">
+        <p>{{ article.article_text }}</p>
+        <p><b>Дата: {{ article.date.date() }}</b></p>
+        <button type="button" onclick="delete_post()" class="btn btn-success">Удалить</button>
+        <button type="button" onclick="document.location='/posts/{{ article.article_id }}'" class="btn btn-danger">Редактировать</button>
+    </div>
+</div>
+
+<script>
+    function delete_post() {
+        let xhr = new XMLHttpRequest();
+        xhr.open("DELETE", "/posts/{{ article.article_id }}");
+        xhr.send();
+        document.location='/posts'
+        console.log("запрос отправлен")
+    }
+</script>
+{% endblock %}

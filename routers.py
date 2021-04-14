@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
-from flask import Blueprint, render_template, abort, request, redirect, url_for
+from flask import Blueprint, render_template, abort, request, redirect, url_for, jsonify
 from models import User, Article
 from crypt import bcrypt
-from forms import AuthForm#, ArticleForm
+from forms import AuthForm
 from sqlalchemy.exc import IntegrityError
 import db
 import json
@@ -13,11 +13,6 @@ wrap = Blueprint('wrap', __name__)
 @wrap.route('/')
 def get_page():
     return render_template("base.html")
-
-
-@wrap.route('/index')
-def get_page_index():
-    return render_template("index.html")
 
 
 @wrap.route('/signup', methods=['GET', 'POST'])
@@ -62,27 +57,62 @@ def welcome():
 @wrap.route('/create_article', methods=['POST', 'GET'])
 def create_article():
     if request.method == 'POST':
-        print(request.form)
         article = Article(title=request.form['title'], article_text=request.form['article_text'], intro=request.form['intro'])
         try:
             db.session.add(article)
             db.session.commit()
             return redirect('/posts')
-        
+
+        except:
+            return "При добавлении статьи произошла ошибка"
+    else:
+        return render_template("create_article.html")
+
+
+@wrap.route('/posts')
+def posts():
+    articles = db.session.query(Article).all()
+    db.session.close()
+    return render_template('posts.html', articles=articles)
+
+
+@wrap.route('/posts/<int:article_id>')
+def show_article(article_id):  
+    article = db.session.query(Article).get(article_id)
+    if not article:
+        abort(404)
+    return render_template("post_detail.html", article=article)
+
+
+@wrap.route('/posts/<int:article_id>', methods=["DELETE"])
+def delete_article(article_id):
+    article = db.session.query(Article).get(article_id)
+    try:
+        db.session.delete(article)
+        db.session.commit()
+        db.session.close()
+        return abort(200)
+    except:
+        return "При удалении статьи возникла ошибка"
+
+
+@wrap.route('/posts/<int:article_id>/update', methods=['POST', 'GET'])
+def update_article(article_id):
+    if request.method == "POST":
+        title = request.form['title']
+        intro = request.form['intro']
+        article_text = request.form['article_text']
+
+        article = Article(title=request.form['title'], article_text=request.form['article_text'], intro=request.form['intro'])
+        try:
+            db.session.add(article)
+            db.session.commit()
+            db.session.close()
+            return redirect('/posts')
+
         except:
             return "При добавлении статьи произошла ошибка"
         
     else:
-        return render_template("create_article.html")
-
-@wrap.route('/posts')
-def posts():
-    articles = db.session.query(Article).order_by(Article.date.desc()).all()
-
-    return render_template('posts.html', articles=articles)
-
-
-@wrap.route('/post/<int:id>')
-def show_post(id):
-    article = Article.query.get(id)
-    return render_template("post_detail.html", article=article)
+        article = db.session.query(Article).get(article_id)
+        return render_template("post_detail.html", article=article)
