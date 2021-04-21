@@ -12,7 +12,7 @@ wrap = Blueprint('wrap', __name__)
 
 @wrap.route('/')
 def get_page():
-    return render_template("base.html")
+    return render_template('base.html')
 
 
 @wrap.route('/signup', methods=['GET', 'POST'])
@@ -66,13 +66,12 @@ def create_article():
         except:
             return "При добавлении статьи произошла ошибка"
     else:
-        return render_template("create_article.html")
+        return render_template('create_article.html')
 
 
 @wrap.route('/posts')
 def posts():
     articles = db.session.query(Article).all()
-    db.session.close()
     return render_template('posts.html', articles=articles)
 
 
@@ -81,16 +80,15 @@ def show_article(article_id):
     article = db.session.query(Article).get(article_id)
     if not article:
         abort(404)
-    return render_template("post_detail.html", article=article)
+    return render_template('post_detail.html', article=article)
 
 
-@wrap.route('/posts/<int:article_id>', methods=["DELETE"])
+@wrap.route('/posts/<int:article_id>', methods=['DELETE'])
 def delete_article(article_id):
     article = db.session.query(Article).get(article_id)
     try:
         db.session.delete(article)
         db.session.commit()
-        db.session.close()
         return abort(200)
     except:
         return "При удалении статьи возникла ошибка"
@@ -98,21 +96,16 @@ def delete_article(article_id):
 
 @wrap.route('/posts/<int:article_id>/update', methods=['POST', 'GET'])
 def update_article(article_id):
-    if request.method == "POST":
-        title = request.form['title']
-        intro = request.form['intro']
-        article_text = request.form['article_text']
-
-        article = Article(title=request.form['title'], article_text=request.form['article_text'], intro=request.form['intro'])
+    article = db.session.query(Article).get(article_id)
+    if request.method == 'POST':
+        article.title = request.form['title']
+        article.intro = request.form['intro']
+        article.article_text = request.form['article_text']
         try:
-            db.session.add(article)
             db.session.commit()
             db.session.close()
             return redirect('/posts')
-
         except:
-            return "При добавлении статьи произошла ошибка"
-        
+            return "При изменении статьи произошла ошибка"
     else:
-        article = db.session.query(Article).get(article_id)
-        return render_template("post_detail.html", article=article)
+        return render_template("post_update.html", article=article)
