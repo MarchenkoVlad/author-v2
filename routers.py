@@ -6,6 +6,9 @@ from forms import AuthForm
 from sqlalchemy.exc import IntegrityError
 import db
 import json
+from flask_login import login_user, login_required, logout_user
+from models import User
+
 
 wrap = Blueprint('wrap', __name__)
 
@@ -45,8 +48,16 @@ def login():
         if found_user:
             authenticated_user = bcrypt.check_password_hash(found_user.password, form.data['password'])
             if authenticated_user:
+                login_user(found_user)
                 return redirect(url_for('wrap.welcome'))
     return render_template('login.html', form=form)
+
+
+@wrap.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('wrap.posts'))
 
 
 @wrap.route('/welcome')
@@ -55,6 +66,7 @@ def welcome():
 
 
 @wrap.route('/create_article', methods=['POST', 'GET'])
+@login_required
 def create_article():
     if request.method == 'POST':
         article = Article(title=request.form['title'], article_text=request.form['article_text'], intro=request.form['intro'])
@@ -62,7 +74,6 @@ def create_article():
             db.session.add(article)
             db.session.commit()
             return redirect('/posts')
-
         except:
             return "При добавлении статьи произошла ошибка"
     else:
@@ -70,9 +81,13 @@ def create_article():
 
 
 @wrap.route('/posts')
+@login_required
 def posts():
-    articles = db.session.query(Article).all()
-    return render_template('posts.html', articles=articles)
+    try:
+        articles = db.session.query(Article).all()
+        return render_template('posts.html', articles=articles)
+    except:
+        return render_template('login.html')
 
 
 @wrap.route('/posts/<int:article_id>')
