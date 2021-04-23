@@ -4,8 +4,9 @@ from crypt import bcrypt
 from db import Base
 from datetime import datetime
 from sqlalchemy.types import Text
+from flask_login import UserMixin
 
-class User(Base):
+class User(UserMixin, Base):
     '''
     Base model User
     '''
@@ -23,9 +24,13 @@ class User(Base):
         self.last_name = last_name
         self.email = email
         self.password = bcrypt.generate_password_hash(password).decode('UTF-8')
+    
+    def get_id(self):
+        return str(self.user_id)
 
 
 class Article(Base):
+
     __tablename__ = 'Articles'
 
     article_id = Column(Integer, primary_key=True)
@@ -34,6 +39,7 @@ class Article(Base):
     article_text = Column(Text, nullable=False)
     date = Column(DateTime, default=datetime.utcnow)
 
+
     def __init__(self, title, intro ,article_text):
         self.title = title
         self.intro = intro
@@ -41,4 +47,6 @@ class Article(Base):
         
         
     def __repr__(self):
-        return '<Article %r' % self.id
+        return '<Article %r' % self.article_id
+
+
