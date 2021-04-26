@@ -38,6 +38,7 @@ class Article(Base):
     intro = Column(String(300), nullable=False)
     article_text = Column(Text, nullable=False)
     date = Column(DateTime, default=datetime.utcnow)
+    post_user_id = Column(Integer)
 
 
     def __init__(self, title, intro ,article_text):
