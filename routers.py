@@ -6,8 +6,7 @@ from forms import AuthForm
 from sqlalchemy.exc import IntegrityError
 import db
 import json
-from flask_login import login_user, login_required, logout_user
-from models import User
+from flask_login import login_user, login_required, logout_user, current_user
 
 
 wrap = Blueprint('wrap', __name__)
@@ -69,7 +68,8 @@ def welcome():
 @login_required
 def create_article():
     if request.method == 'POST':
-        article = Article(title=request.form['title'], article_text=request.form['article_text'], intro=request.form['intro'])
+        found_user_id = current_user.get_id()
+        article = Article(title=request.form['title'], article_text=request.form['article_text'], intro=request.form['intro'], post_user_id=found_user_id)
         try:
             db.session.add(article)
             db.session.commit()
