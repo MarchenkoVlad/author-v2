@@ -41,10 +41,11 @@ class Article(Base):
     post_user_id = Column(Integer)
 
 
-    def __init__(self, title, intro ,article_text):
+    def __init__(self, title, intro ,article_text, post_user_id):
         self.title = title
         self.intro = intro
         self.article_text = article_text
+        self.post_user_id = post_user_id
         
         
     def __repr__(self):
