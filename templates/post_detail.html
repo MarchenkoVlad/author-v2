@@ -10,8 +10,10 @@
     <div class="alert alert-info">
         <p>{{ article.article_text }}</p>
         <p><b>Дата: {{ article.date.date() }}</b></p>
-        <button type="button" onclick="delete_post()" class="btn btn-success">Удалить</button>
-        <button type="button" onclick="document.location='/posts/{{ article.article_id }}'" class="btn btn-danger">Редактировать</button>
+        {% if article.post_user_id == current_user.user_id%}
+            <button type="button" onclick="delete_post()" class="btn btn-success">Удалить</button>
+            <button type="button" onclick="update_post()" class="btn btn-danger">Редактировать</button>
+        {% endif %}
     </div>
 </div>
 
@@ -22,6 +24,13 @@
         xhr.send();
         document.location='/posts'
         console.log("запрос отправлен")
+    }
+
+
+    function update_post() {
+        document.location='{{ article.article_id }}/update'
+        let xhr = new XMLHttpRequest();
+      
     }
 </script>
 {% endblock %}
